@@ -12,11 +12,25 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var storyBoard = UIStoryboard(name: "Main", bundle: nil)
+    
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidLogout", name: userDidLoginNotification, object: nil)
+        
+        if User.currentUser != nil {
+            // Go to logged in screen
+            var vc = storyBoard.instantiateViewControllerWithIdentifier("TweetsViewController") as! UIViewController
+            window?.rootViewController = vc
+        }
         return true
+    }
+    
+    func userDidLogout() {
+        var vc = storyBoard.instantiateInitialViewController() as! UIViewController
+        window?.rootViewController = vc
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -42,21 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
-        TwitterApiClient.sharedInstance.fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: BDBOAuth1Credential(queryString: url.query), success: { (accessToken: BDBOAuth1Credential!) -> Void in
-            println("Access token: \(accessToken)")
-            TwitterApiClient.sharedInstance.requestSerializer.saveAccessToken(accessToken)
-            
-            TwitterApiClient.sharedInstance.GET("1.1/account/verify_credentials.json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
-                println("User: \(response)")
-                }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
-                    println("Error getting user creds: \(error)")
-            })  
-        
-            
-            })
-            { (error: NSError!) -> Void in
-                println("Error whilte fetching token: \(error)")}
-        
+        TwitterApiClient.sharedInstance.openUrl(url)
         return true
     }
 
