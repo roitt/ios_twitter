@@ -44,7 +44,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.username.text = tweetAtIndexPath.author?.name
         cell.userId.text = tweetAtIndexPath.author?.screenName
         cell.tweet.text = tweetAtIndexPath.text
-        cell.timeStap.text = tweetAtIndexPath.createdAtString
+        cell.timeStap.text = tweetAtIndexPath.userReadableDateString
         
         /* Set tweeter image */
         let profileImageUrl: NSURL? = NSURL(string: tweetAtIndexPath.author!.profileImageUrl!)
