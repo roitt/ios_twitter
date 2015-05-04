@@ -18,6 +18,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         // Do any additional setup after loading the view.
         TwitterApiClient.sharedInstance.homeTimelineWithParams(nil, completion: { (tweets, error) -> () in
             self.tweets = tweets
+            self.tweetsTableView.reloadData()
         })
         
         tweetsTableView.dataSource = self
@@ -33,26 +34,43 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         // Dispose of any resources that can be recreated.
     }
     
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath){
         
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
-        cell.username.text = "Rohit Bhoompally"
-        cell.userId.text = "@RohitBhoompally"
-        cell.tweet.text = "This is a tweet yo! This is a tweet yo! This is a tweet yo!"
-        cell.timeStap.text = "12 04 24"
+        let tweetAtIndexPath: Tweet = tweets[indexPath.row]
+        cell.username.text = tweetAtIndexPath.author?.name
+        cell.userId.text = tweetAtIndexPath.author?.screenName
+        cell.tweet.text = tweetAtIndexPath.text
+        cell.timeStap.text = tweetAtIndexPath.createdAtString
+        
+        /* Set tweeter image */
+        let profileImageUrl: NSURL? = NSURL(string: tweetAtIndexPath.author!.profileImageUrl!)
+        if (profileImageUrl != nil) {
+            var urlRequest: NSMutableURLRequest = NSMutableURLRequest(URL: profileImageUrl!)
+            cell.userImage.setImageWithURLRequest(urlRequest, placeholderImage: nil, success: { (request:NSURLRequest!, response:NSHTTPURLResponse!, image:UIImage!) -> Void in
+                if urlRequest != request {
+                    cell.userImage.image = image
+                } else {
+                    UIView.transitionWithView(cell.userImage, duration: 0.5, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
+                        cell.userImage.image = image
+                        }, completion: nil)
+                }
+                }) { (request:NSURLRequest!, response:NSHTTPURLResponse!, error:NSError!) -> Void in
+            }
+        }
+
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1;
-//        if tweets != nil {
-//            return tweets.count
-//        } else {
-//            return 0
-//        }
+        if tweets != nil {
+            return tweets.count
+        } else {
+            return 0
+        }
     }
     
 
