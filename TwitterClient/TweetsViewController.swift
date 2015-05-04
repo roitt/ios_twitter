@@ -12,14 +12,17 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tweetsTableView: UITableView!
     var tweets: [Tweet]!
+    
+    var refreshControl: UIRefreshControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        tweetsTableView.insertSubview(refreshControl, atIndex: 0)
 
-        // Do any additional setup after loading the view.
-        TwitterApiClient.sharedInstance.homeTimelineWithParams(nil, completion: { (tweets, error) -> () in
-            self.tweets = tweets
-            self.tweetsTableView.reloadData()
-        })
+        makeTwitterTimelineCall(false)
         
         tweetsTableView.dataSource = self
         tweetsTableView.delegate = self
@@ -28,6 +31,20 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         tweetsTableView.rowHeight = UITableViewAutomaticDimension
         tweetsTableView.estimatedRowHeight = 120
     }
+    
+    func makeTwitterTimelineCall(isRefreshing: Bool) {
+        TwitterApiClient.sharedInstance.homeTimelineWithParams(nil, completion: { (tweets, error) -> () in
+            if isRefreshing {
+                self.refreshControl.endRefreshing()
+            }
+            self.tweets = tweets
+            self.tweetsTableView.reloadData()
+        })
+    }
+    
+    func onRefresh() {
+        makeTwitterTimelineCall(true)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -35,7 +52,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath){
-        
+        tweetsTableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
