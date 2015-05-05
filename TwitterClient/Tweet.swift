@@ -14,6 +14,7 @@ class Tweet: NSObject {
     var createdAtString: String?
     var createdAt: NSDate?
     var userReadableDateString: String?
+    var favorited: Bool?
     
     init(dictionary: NSDictionary) {
         author = User(dictionary: dictionary["user"] as! NSDictionary)
@@ -28,6 +29,13 @@ class Tweet: NSObject {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "MMM d, yy"
         userReadableDateString = dateFormatter.stringFromDate(createdAt!)
+        
+        let ftd: Int = (dictionary["favorited"] as? Int)!
+        if ftd == 0 {
+            favorited = false
+        } else {
+            favorited = true;
+        }
     }
     
     class func tweetsWithArray(array: [NSDictionary]) -> [Tweet] {
