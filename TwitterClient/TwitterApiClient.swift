@@ -54,6 +54,19 @@ class TwitterApiClient: BDBOAuth1RequestOperationManager {
         })
     }
     
+    func updateStatus(text: String, completion: (AnyObject?, NSError?) -> Void) {
+        let params = [
+            "status": text
+        ]
+        
+        POST("1.1/statuses/update.json", parameters: params, success: { (request, response) in
+                completion(response, nil)
+            },
+            failure: { (request, error) in
+                completion(nil, error)
+        })
+    }
+    
     func openUrl(url: NSURL) {
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: BDBOAuth1Credential(queryString: url.query), success: { (accessToken: BDBOAuth1Credential!) -> Void in
             println("Access token: \(accessToken)")
