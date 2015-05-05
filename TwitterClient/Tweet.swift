@@ -15,6 +15,7 @@ class Tweet: NSObject {
     var createdAt: NSDate?
     var userReadableDateString: String?
     var favorited: Bool?
+    var retweeted: Bool?
     
     init(dictionary: NSDictionary) {
         author = User(dictionary: dictionary["user"] as! NSDictionary)
@@ -34,7 +35,14 @@ class Tweet: NSObject {
         if ftd == 0 {
             favorited = false
         } else {
-            favorited = true;
+            favorited = true
+        }
+        
+        let rtd: Int = (dictionary["retweeted"] as? Int)!
+        if  rtd == 0 {
+            retweeted = false
+        } else {
+            retweeted = true
         }
     }
     

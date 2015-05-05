@@ -18,6 +18,8 @@ class TweetDetailViewController: UIViewController {
     @IBOutlet weak var tweeterName: UILabel!
     @IBOutlet weak var tweeterImage: UIImageView!
     @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var retweetButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,6 +42,10 @@ class TweetDetailViewController: UIViewController {
         
         if (tweet.favorited == true) {
             favoriteButton.setImage(UIImage(named: "favorite_on.png"), forState: UIControlState.Normal)
+        }
+        
+        if tweet.retweeted == true {
+            retweetButton.setImage(UIImage(named: "retweet_on.png"), forState: UIControlState.Normal)
         }
     }
 

@@ -404,7 +404,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Tweet" id="9vm-eM-AeO"/>
                     <connections>
-                        <outlet property="favoriteButton" destination="ert-kN-5hX" id="DGc-PH-BaN"/>
+                        <outlet property="favoriteButton" destination="WeE-a2-9ES" id="GWH-m7-uMA"/>
+                        <outlet property="retweetButton" destination="WeE-a2-9ES" id="C4o-qH-bWX"/>
                         <outlet property="tweetDateTime" destination="BmB-8J-j7S" id="7OT-51-hdO"/>
                         <outlet property="tweetText" destination="kWO-Bn-CHJ" id="H7O-2h-SIR"/>
                         <outlet property="tweeterImage" destination="xeq-w5-dus" id="Fj3-Ty-p9A"/>
