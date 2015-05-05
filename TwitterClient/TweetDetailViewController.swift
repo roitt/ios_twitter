@@ -59,6 +59,11 @@ class TweetDetailViewController: UIViewController {
     }
 
     @IBAction func onRetweet(sender: AnyObject) {
+        TwitterApiClient.sharedInstance.retweetWithCompletion(tweet!.id!, completion: { (newTweet, error) -> () in
+            if error == nil {
+               
+            }
+        })
     }
     @IBAction func onReply(sender: AnyObject) {
     }

@@ -68,6 +68,30 @@ class TwitterApiClient: BDBOAuth1RequestOperationManager {
         })
     }
     
+    func retweetWithCompletion(tweetId: Int, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        POST("/1.1/statuses/retweet/\(tweetId).json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            var tweet = Tweet(dictionary: response as! NSDictionary)
+            completion(tweet: tweet, error: nil)
+            
+            }) { (operation:AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println(error)
+                completion(tweet: nil, error: error)
+        }
+    }
+    
+    func favoriteWithCompletion(tweetId: Int, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        var params = ["id": tweetId]
+        
+        POST("/1.1/favorites/create.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            var tweet = Tweet(dictionary: response as! NSDictionary)
+            completion(tweet: tweet, error: nil)
+            
+            }) { (operation:AFHTTPRequestOperation!, error: NSError!) -> Void in
+                println(error)
+                completion(tweet: nil, error: error)
+        }
+    }
+    
     func openUrl(url: NSURL) {
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: BDBOAuth1Credential(queryString: url.query), success: { (accessToken: BDBOAuth1Credential!) -> Void in
             println("Access token: \(accessToken)")
