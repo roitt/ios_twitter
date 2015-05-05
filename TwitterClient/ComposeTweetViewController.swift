@@ -55,7 +55,7 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
             
             if ( response != nil) {
                 println("Status succesfully updated.")
-                
+                self.navigationController?.popViewControllerAnimated(true)
             }
         })
     }

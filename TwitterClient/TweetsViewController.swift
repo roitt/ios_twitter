@@ -14,7 +14,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     var tweets: [Tweet]!
     
     var refreshControl: UIRefreshControl!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -90,6 +90,10 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             return 0
         }
+    }
+    
+    @IBAction func onLogout(sender: AnyObject) {
+        User.currentUser?.logout()
     }
     
 
